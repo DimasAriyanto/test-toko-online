@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
@@ -41,10 +42,7 @@ class ProductController extends Controller
         try {
             $data = $request->validated();
 
-            $product = Product::create([
-                'name' => $data['name'],
-                'price' => $data['price'],
-            ]);
+            $product = Product::create($data);
 
             if($product) {
                 return redirect()->route('product.index')->with('status', 'Product seccess created!');
@@ -73,12 +71,9 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-        ]);
+        $data = $request->validate();
 
         $product->update($data);
 
